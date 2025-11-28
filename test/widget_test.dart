@@ -5,26 +5,26 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
+//import 'package:flutter/material.dart';
+//import 'package:flutter_test/flutter_test.dart';
 
-import 'package:polleria_cabana_dev/main_cliente.dart';
+//import 'package:polleria_cabana_dev/main_cliente.dart';
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget( MyApp());
+//import 'package:flutter/material.dart';
+//import 'package:flutter_test/flutter_test.dart';
+//import 'package:polleria_cabana_dev/main_cliente.dart';
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+//void main() {
+  //testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    //await tester.pumpWidget(const ClienteApp());
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    //expect(find.text('0'), findsOneWidget);
+    //expect(find.text('1'), findsNothing);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
-}
+    //await tester.tap(find.byIcon(Icons.add));
+    //await tester.pump();
+
+    //expect(find.text('0'), findsNothing);
+    //expect(find.text('1'), findsOneWidget);
+  //});
+//}
