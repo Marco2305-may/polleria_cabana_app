@@ -2,7 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../widgets/custom_buttom.dart'; // si quieres usar tu CustomButton
+
+import '../../../widgets/custom_buttom.dart';
+
 
 class RegisterClienteScreen extends StatefulWidget {
   const RegisterClienteScreen({super.key});
@@ -36,6 +38,9 @@ class _RegisterClienteScreenState extends State<RegisterClienteScreen> {
         "telefono": telefono.text.trim(),
         "rol": "cliente",
       });
+
+      // 3. Cerrar sesion despues de registrar
+      await FirebaseAuth.instance.signOut();
 
       setState(() => loading = false);
 
@@ -166,22 +171,11 @@ class _RegisterClienteScreenState extends State<RegisterClienteScreen> {
                     const SizedBox(height: 25),
 
                     // 🔹 Botón Registrar
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.brown,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      onPressed: loading ? null : _registrarCliente,
-                      child: loading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                        "Registrar",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
+                    CustomButton(
+                      text: "Registrar",
+                      loading: loading,
+                      onPressed: _registrarCliente,
+                    )
                   ],
                 ),
               ),

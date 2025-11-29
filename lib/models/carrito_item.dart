@@ -19,4 +19,13 @@ class CarritoItem {
       subtotal: (data['subtotal'] ?? 0).toDouble(),
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'cantidad': cantidad,
+      'id_comida': idComida,
+      'subtotal': subtotal,
+    };
+  }
 }
+

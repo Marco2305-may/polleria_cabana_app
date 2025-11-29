@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../services/cliente/authCliente_service.dart';
-import '../../widgets/custom_buttom.dart';
+import '../../../services/cliente/authCliente_service.dart';
+import '../../../widgets/custom_buttom.dart';
 
 
 class LoginClienteScreen extends StatefulWidget {
@@ -32,6 +32,8 @@ class _LoginClienteScreenState extends State<LoginClienteScreen> {
           backgroundColor: Colors.green,
         ),
       );
+      Navigator.pushReplacementNamed(context, '/homeCliente');
+
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

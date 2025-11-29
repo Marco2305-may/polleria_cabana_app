@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:polleria_cabana_dev/screens/cliente/loginCliente_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/auth/loginCliente_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

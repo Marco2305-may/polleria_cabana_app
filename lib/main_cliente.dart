@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:polleria_cabana_dev/screens/cliente/loginCliente_screen.dart';
-import 'package:polleria_cabana_dev/screens/cliente/ombording_screen.dart';
-import 'package:polleria_cabana_dev/screens/cliente/registroCliente_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/auth/loginCliente_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/auth/ombording_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/auth/registroCliente_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/home/homeCliente_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,10 @@ class ClienteApp extends StatelessWidget {
         '/onboarding': (context) => OnboardingScreen(),
         '/loginCliente': (context) => LoginClienteScreen(),
         '/registroCliente': (context) => RegisterClienteScreen(),
+        '/homeCliente': (context) {
+          final user = FirebaseAuth.instance.currentUser;
+          return HomeScreen(idUsuario: user!.uid); // Aqui ya es valida
+        },
       },
       home: const AuthWrapper(),
     );
@@ -64,8 +70,9 @@ class AuthWrapper extends StatelessWidget {
 
         // Usuario autenticado
         if (snapshot.hasData && snapshot.data != null) {
-          print("➡️ Usuario autenticado → LoginClienteScreen");
-          return const LoginClienteScreen();
+          final user = snapshot.data!;
+          print("➡️ Usuario autenticado → HomeScreen");
+          return HomeScreen(idUsuario: user.uid);
         }
 
         // Usuario NO autenticado
