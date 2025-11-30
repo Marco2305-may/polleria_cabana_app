@@ -19,12 +19,21 @@ class Reservacion {
     return Reservacion(
       id: id,
       detalle: data['detalle'] ?? '',
-      fechaHora: data['fecha - hora'] != null
-          ? (data['fecha - hora'] as Timestamp).toDate()
+      fechaHora: data['fechaHora'] != null
+          ? (data['fechaHora'] as Timestamp).toDate()
           : DateTime.now(),
-      idUsuario: data['id_usuario'] ?? '',
+      idUsuario: data['idUsuario'] ?? '',
       invitados: data['invitados'] ?? 0,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'detalle': detalle,
+      'fechaHora': fechaHora,
+      'idUsuario': idUsuario,
+      'invitados': invitados,
+    };
   }
 }
 

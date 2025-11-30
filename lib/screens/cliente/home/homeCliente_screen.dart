@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:polleria_cabana_dev/screens/cliente/menu/menuCliente_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/perfil/perfilCliente_screen.dart';
+import 'package:polleria_cabana_dev/screens/cliente/reservacion/reservas_screen.dart';
+
+import '../pedido/seguimientoPedido_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String idUsuario;
@@ -22,9 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
     // 👇 Ahora sí puedes usar widget.idUsuario
     _screens = [
       MenuClienteScreen(idUsuario: widget.idUsuario),
-      const PlaceholderScreen(title: "Reservar"),
-      const PlaceholderScreen(title: "Pedidos"),
-      const PlaceholderScreen(title: "Perfil"),
+      ReservasScreen(idUsuario: widget.idUsuario),
+      SeguimientoPedidosScreen(idUsuario: widget.idUsuario),
+      PerfilClienteScreen(idUsuario: widget.idUsuario),
     ];
   }
 

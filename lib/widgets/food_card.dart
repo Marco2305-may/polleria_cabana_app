@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import '../../../models/comida.dart';
 import '../screens/cliente/menu/detalleCliente_screen.dart';
+import '../services/cliente/carritoCliente_service.dart';
 
 class FoodCard extends StatelessWidget {
   final Comida comida;
-  final String idUsuario; // 🟢 Usuario actual para DetalleClienteScreen
+  final String idUsuario;
+  final CarritoClienteService carritoService;
 
-  const FoodCard({super.key, required this.comida, required this.idUsuario});
+  const FoodCard({
+    super.key,
+    required this.comida,
+    required this.idUsuario,
+    required this.carritoService,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navega a DetalleClienteScreen al tocar cualquier parte del card
+        // Navegar a DetalleClienteScreen
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => DetalleClienteScreen(
               comida: comida,
               idUsuario: idUsuario,
+              carritoService: carritoService,
             ),
           ),
         );
@@ -29,7 +37,7 @@ class FoodCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(
           children: [
-            // Imagen con placeholder y manejo de errores
+            // Imagen con placeholder
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
@@ -47,20 +55,20 @@ class FoodCard extends StatelessWidget {
                   return SizedBox(
                     width: 110,
                     height: 110,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator()),
                   );
                 },
                 errorBuilder: (context, error, stackTrace) {
                   return SizedBox(
                     width: 110,
                     height: 110,
-                    child: Center(child: Icon(Icons.image_not_supported)),
+                    child: const Center(child: Icon(Icons.image_not_supported)),
                   );
                 },
               ),
             ),
 
-            // Info
+            // Información de la comida
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12),
@@ -74,10 +82,12 @@ class FoodCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       comida.descripcion,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -98,6 +108,7 @@ class FoodCard extends StatelessWidget {
     );
   }
 }
+
 
 
 

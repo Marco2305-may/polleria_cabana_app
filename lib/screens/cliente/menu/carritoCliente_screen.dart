@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../models/carrito_item.dart';
 import '../../../models/comida.dart';
+import '../../../models/pedido_item.dart';
 import '../../../services/cliente/carritoCliente_service.dart';
 import '../../../services/cliente/comidaCliente_service.dart';
 import '../../../widgets/custom_buttom.dart';
+import '../pedido/pedido_form_screen.dart';
 
 class CarritoClienteScreen extends StatefulWidget {
   final String idUsuario;
@@ -43,7 +44,7 @@ class _CarritoClienteScreenState extends State<CarritoClienteScreen> {
     }
   }
 
-  double getTotal(List<CarritoItem> items) {
+  double getTotal(List<PedidoItem> items) {
     return items.fold(0, (sum, item) => sum + item.subtotal);
   }
 
@@ -60,8 +61,8 @@ class _CarritoClienteScreenState extends State<CarritoClienteScreen> {
         title: const Text('Carrito'),
         backgroundColor: Colors.brown[700],
       ),
-      body: StreamBuilder<List<CarritoItem>>(
-        stream: _carritoService.obtenerCarrito(widget.idUsuario),
+      body: StreamBuilder<List<PedidoItem>>(
+        stream: _carritoService.obtenerCarritoStream(widget.idUsuario),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
@@ -134,12 +135,12 @@ class _CarritoClienteScreenState extends State<CarritoClienteScreen> {
                               ),
                             ),
 
-                            // 🔥 BOTÓN ELIMINAR SOLO
+                            // BOTÓN ELIMINAR
                             IconButton(
                               onPressed: () {
                                 _carritoService.eliminarItem(
                                   widget.idUsuario,
-                                  item.id,
+                                  item.idComida,
                                 );
                               },
                               icon: const Icon(Icons.delete, color: Colors.red),
@@ -175,9 +176,11 @@ class _CarritoClienteScreenState extends State<CarritoClienteScreen> {
                     CustomButton(
                       text: 'Realizar pedido',
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Pedido realizado (simulación)')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PedidoFormScreen(idUsuario: widget.idUsuario),
+                          ),
                         );
                       },
                     ),
@@ -191,6 +194,7 @@ class _CarritoClienteScreenState extends State<CarritoClienteScreen> {
     );
   }
 }
+
 
 
 

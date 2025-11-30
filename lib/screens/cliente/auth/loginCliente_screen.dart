@@ -151,9 +151,40 @@ class _LoginClienteScreenState extends State<LoginClienteScreen> {
                     SizedBox(
                       height: 50,
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          _service.loginWithGoogle();
+                        onPressed: () async {
+                          setState(() => loading = true);
+                          try {
+                            final user = await _service.loginWithGoogle();
+                            setState(() => loading = false);
+
+                            if (user != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("LOGIN GOOGLE OK → Bienvenido ${user.displayName ?? 'Cliente'}"),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              Navigator.pushReplacementNamed(context, '/homeCliente');
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Inicio cancelado o tokens nulos"),
+                                  backgroundColor: Colors.orange,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            setState(() => loading = false);
+                            // muestra el error crudo para debugging
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Error iniciando sesión con Google: $e"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                         },
+
                         icon: Image.network(
                           "https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png",
                           height: 25,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:polleria_cabana_dev/screens/cliente/auth/loginCliente_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -20,21 +19,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     "https://firebasestorage.googleapis.com/v0/b/db-polleria-cabana.firebasestorage.app/o/Screen5.png?alt=media&token=a87940eb-aaae-4f50-a628-f4a78dfc92ff",
   ];
 
+  /// 🔥 Versión segura sin null crash
   double _getSelected(int index) {
-    double selected = 0;
-    if (_pageController.hasClients) {
-      double page = _pageController.page ?? _pageController.initialPage.toDouble();
-      selected = (1 - ((page - index).abs().clamp(0.0, 1.0)));
-    }
-    return selected;
+    if (!_pageController.hasClients) return 0;
+
+    final page = _pageController.page;
+    if (page == null) return 0;
+
+    return (1 - ((page - index).abs().clamp(0.0, 1.0)));
   }
 
   @override
   void initState() {
     super.initState();
+
     _pageController.addListener(() {
+      if (!_pageController.hasClients) return;
+
+      final page = _pageController.page;
+      if (page == null) return;
+
       setState(() {
-        _currentPage = _pageController.page?.round() ?? 0;
+        _currentPage = page.round();
       });
     });
   }
@@ -50,6 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // 🔥 PageView estable
           PageView.builder(
             controller: _pageController,
             itemCount: _images.length,
@@ -65,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
           ),
 
-          // Indicadores en la parte inferior
+          // Indicadores
           Positioned(
             bottom: 100,
             left: 0,
@@ -73,7 +80,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(_images.length, (index) {
-                double selected = _getSelected(index);
+                final selected = _getSelected(index);
+
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -88,7 +96,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
 
-          // Botón “Empezar” solo en la última página
+          // Botón "Empezar"
           if (_currentPage == _images.length - 1)
             Positioned(
               bottom: 40,
@@ -120,6 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
+
 
 
 

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import '../../../models/comida.dart';
-import '../../../models/carrito_item.dart';
+import '../../../models/pedido_item.dart';
 import '../../../services/cliente/carritoCliente_service.dart';
 import '../../../widgets/custom_buttom.dart';
 
 class DetalleClienteScreen extends StatefulWidget {
   final Comida comida;
   final String idUsuario;
+  final CarritoClienteService carritoService;
 
   const DetalleClienteScreen({
     super.key,
     required this.comida,
     required this.idUsuario,
+    required this.carritoService,
   });
 
   @override
@@ -20,7 +22,6 @@ class DetalleClienteScreen extends StatefulWidget {
 
 class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
   int cantidad = 1;
-  final carritoService = CarritoClienteService();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,6 @@ class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
                     ? Image.network(widget.comida.imagen, fit: BoxFit.cover)
                     : Image.asset('assets/images/default_food.jpg', fit: BoxFit.cover),
               ),
-
               // Botón volver
               Positioned(
                 top: 40,
@@ -53,9 +53,7 @@ class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-
           // Contenido
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -72,14 +70,11 @@ class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
                   style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
-
                 Text(
                   'Precio: S/. ${widget.comida.precio.toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-
                 const SizedBox(height: 16),
-
                 // Cantidad
                 Row(
                   children: [
@@ -100,10 +95,8 @@ class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 8),
-
-                // Mensaje SOLO si es plato principal
+                // Mensaje solo si es plato principal
                 widget.comida.tipo == 'plato principal'
                     ? const Text(
                   'Incluye ají, mayonesa, mostaza y ketchup.',
@@ -113,28 +106,25 @@ class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
               ],
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // BOTÓN PEDIR
+          // Botón agregar al carrito
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: CustomButton(
               text: 'Agregar al Carrito',
-              onPressed: () async {
-                final item = CarritoItem(
-                  id: '',
+              onPressed: () {
+                final pedidoItem = PedidoItem(
                   idComida: widget.comida.id,
+                  nombre: widget.comida.nombre, // ⚡ aquí era el missing
                   cantidad: cantidad,
                   subtotal: widget.comida.precio * cantidad,
                 );
 
-                await carritoService.agregarAlCarrito(item, widget.idUsuario);
-                print("ID USUARIO CARRITO --> ${widget.idUsuario}");
+                widget.carritoService.agregarAlCarrito(pedidoItem, widget.idUsuario);
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                        '${widget.comida.nombre} x$cantidad agregado al carrito'),
+                    content: Text('${widget.comida.nombre} x$cantidad agregado al carrito'),
                   ),
                 );
               },
@@ -145,6 +135,10 @@ class _DetalleClienteScreenState extends State<DetalleClienteScreen> {
     );
   }
 }
+
+
+
+
 
 
 

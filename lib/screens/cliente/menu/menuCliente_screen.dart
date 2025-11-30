@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../models/comida.dart';
 import '../../../services/cliente/comidaCliente_service.dart';
+import '../../../services/cliente/carritoCliente_service.dart';
 import '../../../widgets/contador_carritoBadge.dart';
 import '../../../widgets/food_card.dart';
 
 class MenuClienteScreen extends StatelessWidget {
   final String idUsuario;
+  final _service = ComidaClienteService();
+  final _carritoService = CarritoClienteService(); // <-- instanciamos aquí
 
   MenuClienteScreen({super.key, required this.idUsuario});
-
-  final _service = ComidaClienteService();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class MenuClienteScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          CartIconWithBadge(),
+          CartIconWithBadge(carritoService: _carritoService), // <-- pasamos instancia válida
         ],
       ),
       body: StreamBuilder<List<Comida>>(
@@ -46,7 +47,8 @@ class MenuClienteScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return FoodCard(
                 comida: comidas[index],
-                idUsuario: idUsuario, // 👈 AHORA SÍ SE ENVÍA
+                idUsuario: idUsuario,
+                carritoService: _carritoService,
               );
             },
           );
@@ -55,4 +57,5 @@ class MenuClienteScreen extends StatelessWidget {
     );
   }
 }
+
 
