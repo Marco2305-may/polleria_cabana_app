@@ -1,16 +1,23 @@
-# polleria_cabana_dev
+# 🐔 Pollería La Cabaña - App Flutter
 
-Aplicativo para cliente y admin para polleria la cabana
+## 📱 Descripción
 
-## Getting Started
+Pollería La Cabaña es una **app móvil Flutter** para gestionar pedidos, reservas y usuarios de una pollería.  
+Arquitectura: **MVVM (Model-View-ViewModel)** ✅
 
-This project is a starting point for a Flutter application.
+- **Model (📦)**: Entidades de la app (`Usuario`, `Pedido`, `Comida`, `Reservación`).  
+- **View (🖥️)**: Pantallas y widgets que interactúan con el usuario.  
+- **ViewModel / Services (⚙️)**: Lógica de negocio, conexión con Firebase, manejo de estado (`Provider`).
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📂 Estructura del proyecto
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```text
+lib/
+├─ models/      # Entidades principales (Usuario, Pedido, Comida, Reservación, etc.)
+├─ screens/     # Pantallas de la app (cliente, admin)
+├─ services/    # Lógica de negocio y conexión con Firebase
+├─ widgets/     # Widgets reutilizables
+└─ utils/       # Configuraciones privadas y utilidades (no subir al repo)
+
