@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "674459057844",
+    "project_id": "db-polleria-cabana",
+    "storage_bucket": "db-polleria-cabana.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674459057844:android:be6c2942874063549421e1",
+        "android_client_info": {
+          "package_name": "com.example.polleria_cabana_dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674459057844-gkppl5ji6fnlr4t4g29vvvl0sct8tqbi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.polleria_cabana_dev",
+            "certificate_hash": "2930dca591c64a6d551571ccf563b7257ca90a05"
+          }
+        },
+        {
+          "client_id": "674459057844-4b95fl3f47c3j1lhs9immp98hutnnju3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqhRZV_uZdlfM4_p7Ah7bSr1_0NWSW6y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674459057844-4b95fl3f47c3j1lhs9immp98hutnnju3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
