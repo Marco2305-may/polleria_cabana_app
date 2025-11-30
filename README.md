@@ -21,12 +21,16 @@ lib/
 ├─ widgets/     # Widgets reutilizables
 └─ utils/       # Configuraciones privadas y utilidades (no subir al repo)
 
+
+```
+
 ## 🧩 Dependencias
 
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
+
   firebase_core: ^4.2.1
   cloud_firestore: ^6.1.0
   firebase_auth: ^6.1.2
@@ -39,7 +43,10 @@ dependencies:
   geocoding: ^2.1.0
   geolocator: ^11.0.0
   cupertino_icons: ^1.0.8
-  google_api_headers: ^1.6.0
+  google_api_headers: ^1.6.0 
+
+  ```
+## 🌐 Integración con Firebase
 
 Se utiliza Firebase para:
 
@@ -53,30 +60,10 @@ Se utiliza Firebase para:
 
 > Todos los archivos de configuración privada están en `lib/utils/` y se ignoran con `.gitignore`.
 
----
-
 ## 🌐 APIs externas
 
-- **Google Maps API**: mostrar ubicación de la pollería y selección de direcciones.
-- **Firebase Cloud**: autenticación, base de datos y almacenamiento.
+- **Google Maps API:** mostrar ubicación de la pollería y selección de direcciones.
+- **Firebase Cloud:** autenticación, base de datos y almacenamiento.
 
 > Las claves de las APIs **no se suben al repositorio**.
 
----
-
-## ⚡ Instalación
-
-1. Clonar el repositorio:
-
-```bash
-git clone https://github.com/Marco2305-may/polleria_cabana_app.git
-
-
-2. Configurar Firebase:  
-   - Colocar `google-services.json` en `android/app/`  
-   - Colocar `GoogleService-Info.plist` en `iOS/Runner/`  
-
-3. Ejecutar la app:
-
-```bash
-flutter run
