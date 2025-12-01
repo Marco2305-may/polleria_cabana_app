@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../services/cliente/authCliente_service.dart';
+import '../../../services/role_service.dart';
 import '../../../widgets/custom_buttom.dart';
 
 
@@ -21,17 +22,36 @@ class _LoginClienteScreenState extends State<LoginClienteScreen> {
   Future<void> _loginTest() async {
     setState(() => loading = true);
 
-    final user = await _service.loginCliente(email.text.trim(), pass.text.trim());
+    final user = await _service.loginCliente(
+      email.text.trim(),
+      pass.text.trim(),
+    );
 
     setState(() => loading = false);
 
     if (user != null) {
+      final rol = await RoleService().obtenerRol(user.uid);
+
+      // ❌ Si NO es cliente → afuera
+      if (rol != "cliente") {
+        await _service.signOut();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Acceso permitido solo a CLIENTES"),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      // ✔ ACCESO CORRECTO
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("LOGIN OK → Bienvenido ${user.displayName ?? 'Cliente'}"),
+          content: Text("LOGIN OK → Bienvenido ${user.email}"),
           backgroundColor: Colors.green,
         ),
       );
+
       Navigator.pushReplacementNamed(context, '/homeCliente');
 
     } else {
@@ -43,6 +63,7 @@ class _LoginClienteScreenState extends State<LoginClienteScreen> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -158,21 +179,31 @@ class _LoginClienteScreenState extends State<LoginClienteScreen> {
                             setState(() => loading = false);
 
                             if (user != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("LOGIN GOOGLE OK → Bienvenido ${user.displayName ?? 'Cliente'}"),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
+
+                              final rol = await RoleService().obtenerRol(user.uid);
+
+                              if (rol != "cliente") {
+                                await _service.signOut();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Solo CLIENTES pueden usar esta app"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
                               Navigator.pushReplacementNamed(context, '/homeCliente');
+
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text("Inicio cancelado o tokens nulos"),
+                                  content: Text("Inicio cancelado o tokens inválidos"),
                                   backgroundColor: Colors.orange,
                                 ),
                               );
                             }
+
                           } catch (e) {
                             setState(() => loading = false);
                             // muestra el error crudo para debugging

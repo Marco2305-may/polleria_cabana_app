@@ -44,16 +44,16 @@ class _SeguimientoPedidosScreenState extends State<SeguimientoPedidosScreen> {
     final confirm = await showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Confirmar"),
-        content: const Text("¿Deseas eliminar este pedido?"),
+        title: const Text("Eliminar Pedido"),
+        content: const Text("¿Estás seguro que deseas eliminar este pedido?"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
             child: const Text("Cancelar"),
+            onPressed: () => Navigator.pop(context, false),
           ),
           TextButton(
+            child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("Eliminar"),
           ),
         ],
       ),
@@ -73,81 +73,166 @@ class _SeguimientoPedidosScreenState extends State<SeguimientoPedidosScreen> {
     }
   }
 
+  Widget _estadoChip(String estado) {
+    Color color;
+    switch (estado) {
+      case "pendiente":
+        color = Colors.orange;
+        break;
+      case "preparando":
+        color = Colors.blue;
+        break;
+      case "en camino":
+        color = Colors.green;
+        break;
+      case "entregado":
+        color = Colors.brown;
+        break;
+      default:
+        color = Colors.grey;
+    }
+
+    return Chip(
+      label: Text(
+        estado.toUpperCase(),
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: color,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (pedidos.isEmpty) {
-      return const Center(child: Text("No tienes pedidos aún"));
-    }
-
-    return ListView.builder(
-      itemCount: pedidos.length,
-      itemBuilder: (context, index) {
-        final pedido = pedidos[index];
-
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Texto "Pedido N: Estado"
-                Expanded(
-                  child: Text(
-                    "Pedido ${index + 1}: ${pedido.estado}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-
-                // Iconos de acción
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.shopping_cart),
-                      color: Colors.brown,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PedidoDetalleScreen(pedido: pedido),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.location_on),
-                      color: Colors.brown,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PedidoMapaScreen(pedido: pedido),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.cancel),
-                      color: Colors.red,
-                      onPressed: () => _eliminarPedido(pedido.id),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: const Color(0xFFFFF3CD), // Fondo pollito suave
+      appBar: AppBar(
+        backgroundColor: Colors.brown,
+        title: const Text(
+          "Mis Pedidos",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
-        );
-      },
+        ),
+        centerTitle: true,
+        elevation: 4,
+      ),
+
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : pedidos.isEmpty
+          ? const Center(
+        child: Text(
+          "🍗 No tienes pedidos aún",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.brown,
+          ),
+        ),
+      )
+          : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: pedidos.length,
+        itemBuilder: (context, index) {
+          final pedido = pedidos[index];
+
+          return Card(
+            elevation: 6,
+            shadowColor: Colors.brown.withOpacity(0.3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            margin: const EdgeInsets.only(bottom: 18),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Cabecera pedido
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Pedido #${index + 1}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.brown,
+                        ),
+                      ),
+                      _estadoChip(pedido.estado),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Botones
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  PedidoDetalleScreen(pedido: pedido),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.receipt_long),
+                        label: const Text("Detalles"),
+                      ),
+
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  PedidoMapaScreen(pedido: pedido),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.location_on),
+                        label: const Text("Mapa"),
+                      ),
+
+                      IconButton(
+                        icon: const Icon(Icons.delete,
+                            color: Colors.red),
+                        onPressed: () => _eliminarPedido(pedido.id),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
+
+
 
 

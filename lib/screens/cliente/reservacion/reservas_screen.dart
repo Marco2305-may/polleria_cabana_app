@@ -41,16 +41,19 @@ class _ReservasScreenState extends State<ReservasScreen> {
     final confirmar = await showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Cancelar reserva"),
-        content: const Text("¿Deseas cancelar esta reserva?"),
+        backgroundColor: const Color(0xFFFFF3E0),
+        title: const Text("Cancelar reserva",
+            style: TextStyle(color: Color(0xFF5D3A1A))),
+        content: const Text("¿Deseas cancelar esta reserva?",
+            style: TextStyle(color: Colors.brown)),
         actions: [
           TextButton(
+            child: const Text("No", style: TextStyle(color: Colors.brown)),
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("No"),
           ),
           TextButton(
+            child: const Text("Sí", style: TextStyle(color: Colors.red)),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("Sí"),
           ),
         ],
       ),
@@ -84,65 +87,104 @@ class _ReservasScreenState extends State<ReservasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Reservaciones")),
+      backgroundColor: const Color(0xFFFFF8EC),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFFD180),
+        title: const Text(
+          "🍽 Tus Reservaciones",
+          style: TextStyle(color: Color(0xFF5D3A1A), fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+
       body: loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Colors.orange))
           : reservas.isEmpty
-          ? const Center(child: Text("No tienes reservaciones"))
+          ? const Center(
+        child: Text(
+          "No tienes reservaciones 😢",
+          style: TextStyle(
+            color: Colors.brown,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      )
           : ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: reservas.length,
         itemBuilder: (_, i) {
           final r = reservas[i];
+
           return Card(
-            margin: const EdgeInsets.only(bottom: 14),
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            color: const Color(0xFFFFE0B2),
+            margin: const EdgeInsets.only(bottom: 18),
+
             child: ListTile(
+              contentPadding: const EdgeInsets.all(16),
               title: Text(
                 r.detalle,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5D3A1A),
+                  fontSize: 18,
+                ),
               ),
               subtitle: Text(
-                "Invitados: ${r.invitados}\n"
-                    "Fecha: ${_formatearFecha(r.fechaHora)}",
+                "👥 Invitados: ${r.invitados}\n📅 Fecha: ${_formatearFecha(r.fechaHora)}",
+                style: const TextStyle(
+                  color: Colors.brown,
+                  height: 1.4,
+                ),
               ),
 
-              // ⬇⬇⬇ AQUÍ ESTABA EL ERROR — YA CORREGIDO
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.info, color: Colors.blue),
+                    icon: const Icon(Icons.info,
+                        color: Colors.blue, size: 28),
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (_) => ReservaDetalleScreen(reserva: r),
+                        builder: (_) =>
+                            ReservaDetalleScreen(reserva: r),
                       );
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon:
+                    const Icon(Icons.delete, color: Colors.red),
                     onPressed: () => _cancelarReserva(r.id),
                   ),
                 ],
               ),
-              // ⬆⬆⬆ FIN SOLUCIÓN
             ),
           );
         },
       ),
 
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,   // FAB blanco 🤍
+        elevation: 6,
         onPressed: () async {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) =>
-                  CrearReservaScreen(idUsuario: widget.idUsuario),
+              builder: (_) => CrearReservaScreen(idUsuario: widget.idUsuario),
             ),
           );
           _cargarReservas();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,            // Icono negro
+          size: 32,
+        ),
       ),
     );
   }

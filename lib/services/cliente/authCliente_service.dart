@@ -72,6 +72,7 @@ class AuthClienteService {
         "nombre": user.displayName ?? "Usuario",
         "correo": user.email ?? "",
         "telefono": "",
+        "rol":"cliente",
       });
       print("Firestore: perfil creado para ${user.uid}");
     }

@@ -55,8 +55,10 @@ class _PedidoFormScreenState extends State<PedidoFormScreen> {
       final cantidad = data["cantidad"] ?? 1;
       final subtotal = (data["subtotal"] ?? 0).toDouble();
 
-      final comidaSnap =
-      await FirebaseFirestore.instance.collection("comidas").doc(idComida).get();
+      final comidaSnap = await FirebaseFirestore.instance
+          .collection("comidas")
+          .doc(idComida)
+          .get();
       final nombreComida = comidaSnap.data()?["nombre"] ?? "Producto";
 
       total += subtotal;
@@ -76,7 +78,10 @@ class _PedidoFormScreenState extends State<PedidoFormScreen> {
   }
 
   Future<void> _crearPedido() async {
-    if (direccionText.isEmpty || carritoItems.isEmpty || selectedLat == null || selectedLng == null) {
+    if (direccionText.isEmpty ||
+        carritoItems.isEmpty ||
+        selectedLat == null ||
+        selectedLng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text("Selecciona dirección y verifica el carrito")),
@@ -115,34 +120,50 @@ class _PedidoFormScreenState extends State<PedidoFormScreen> {
     }
   }
 
-  Widget _radioMetodo(String value) {
-    return Row(
-      children: [
-        Radio<String>(
-          value: value,
-          groupValue: metodoPago,
-          onChanged: (val) {
-            if (val != null) setState(() => metodoPago = val);
-          },
-        ),
-        Text(value),
-      ],
+  Widget _radioMetodo(String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Radio<String>(
+            value: value,
+            groupValue: metodoPago,
+            onChanged: (val) {
+              if (val != null) setState(() => metodoPago = val);
+            },
+          ),
+          Icon(icon, color: Colors.brown),
+          const SizedBox(width: 4),
+          Text(value, style: const TextStyle(color: Color(0xFF5D3A1A))),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Nuevo Pedido")),
+      backgroundColor: const Color(0xFFFFF8EC),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFFD180),
+        title: const Text(
+          "🛵 Crear Pedido",
+          style: TextStyle(
+              color: Color(0xFF5D3A1A), fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
 
+            // DIRECCIÓN
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomButton(
-                text: "Ponga su dirección de envío",
+                text: "📍 Seleccionar dirección de envío",
                 onPressed: () async {
                   final result = await Navigator.push(
                     context,
@@ -164,74 +185,133 @@ class _PedidoFormScreenState extends State<PedidoFormScreen> {
 
             if (direccionText.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(
-                  "Dirección seleccionada: $direccionText",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFE0B2),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.home, color: Colors.brown),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          direccionText,
+                          style: const TextStyle(
+                              color: Color(0xFF5D3A1A),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
             const SizedBox(height: 10),
 
+            // ITEMS
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Productos en tu pedido:", style: TextStyle(fontSize: 16)),
-                  const SizedBox(height: 8),
-                  ...carritoItems.map((item) => ListTile(
-                    title: Text(item['nombre']),
-                    subtitle: Text('Cantidad: ${item['cantidad']}'),
-                    trailing: Text(
-                        'S/ ${(item['subtotal'] as double).toStringAsFixed(2)}'),
-                  )),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
+                  const Text("🍗 Productos:",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5D3A1A))),
+                  const SizedBox(height: 12),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Método de pago:", style: TextStyle(fontSize: 16)),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      _radioMetodo("Efectivo"),
-                      const SizedBox(width: 10),
-                      _radioMetodo("Yape / Plin"),
-                      const SizedBox(width: 10),
-                      _radioMetodo("POS"),
-                    ],
+                  ...carritoItems.map(
+                        (item) => Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFE0B2),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: ListTile(
+                        title: Text(item['nombre'],
+                            style: const TextStyle(
+                                color: Color(0xFF5D3A1A),
+                                fontWeight: FontWeight.bold)),
+                        subtitle: Text(
+                          "Cantidad: ${item['cantidad']}",
+                          style: const TextStyle(color: Colors.brown),
+                        ),
+                        trailing: Text(
+                          "S/ ${(item['subtotal']).toStringAsFixed(2)}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
 
+            const SizedBox(height: 10),
+
+            // MÉTODO DE PAGO
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                "Total del pedido: S/ ${carritoItems.fold(0.0, (sum, item) => sum + (item['subtotal'] as double)).toStringAsFixed(2)}",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("💳 Método de pago:",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5D3A1A))),
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    children: [
+                      _radioMetodo("Efectivo", Icons.attach_money),
+                      _radioMetodo("Yape / Plin", Icons.phone_android),
+                      _radioMetodo("POS", Icons.payment),
+                    ],
+                  )
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // TOTAL
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFD180),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Text(
+                  "TOTAL: S/ ${carritoItems.fold(0.0, (sum, i) => sum + (i['subtotal'] as double)).toStringAsFixed(2)}",
+                  style: const TextStyle(
+                      fontSize: 22,
+                      color: Color(0xFF5D3A1A),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomButton(
-                text: "Crear Pedido",
+                text: "🚀 Crear Pedido",
                 onPressed: _crearPedido,
               ),
             ),
+
             const SizedBox(height: 30),
           ],
         ),
@@ -239,6 +319,7 @@ class _PedidoFormScreenState extends State<PedidoFormScreen> {
     );
   }
 }
+
 
 
 
